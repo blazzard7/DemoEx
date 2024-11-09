@@ -21,5 +21,30 @@
         </select>
         <input type="submit" value="Создать" /> 
     </form>
-</body>
+
+<script>
+    const form = document.getElementById('orderForm');
+    const submitButton = document.getElementById('submit');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      const data = {};
+
+      for (const [key, value] of formData.entries()) {
+        data[key] = value;
+      }
+
+      const jsonData = JSON.stringify(data);
+      fetch('http://localhost:7007/ord', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonData
+      })
+      });
+  </script>
+  </body>
 </html>
