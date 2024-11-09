@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Создание заявки</title>
 </head>
 <body>
-    
+    <form id="orderForm" action="http://localhost:7007/ord" method="post">
+        <input type="hidden" name="Content-Type" value="application/json">
+        <input required placeholder="number" type="number" name="number" />
+        <input required placeholder="dateAdded" type="date" name="dateAdded" />
+        <input required placeholder="device" type="text" name="device" />
+        <input required placeholder="problemType" type="text" name="problemType" />
+        <input required placeholder="description" type="text" name="description" />
+        <input required placeholder="client" type="text" name="client" />
+        <select name="status">
+            <option>в ожидании</option>
+            <option>в работе</option>
+            <option>выполнено</option>
+        </select>
+        <input type="submit" value="Создать" /> 
+    </form>
 </body>
 </html>
