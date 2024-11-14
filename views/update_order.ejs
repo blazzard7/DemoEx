@@ -1,0 +1,15 @@
+<h1>Обнова</h1>
+<form action="/orders/<%= order.number %>" method="POST" enctype="application/x-www-form-urlencoded">
+  <input type="hidden" name="number" value="<%= order.number %>">
+  <label for="description">Описание:</label>
+  <input type="text" id="description" name="description" value="<%= order.description %>"><br>
+  <label for="status">Статус:</label>
+  <select id="status" name="status">
+    <option value="в ожидании" <%= order.status === 'в ожидании' ? 'selected' : '' %>>в ожидании</option>
+    <option value="в работе" <%= order.status === 'в работе' ? 'selected' : '' %>>в работе</option>
+    <option value="выполнено" <%= order.status === 'выполнено' ? 'selected' : '' %>>выполнено</option>
+  </select><br>
+  <label for="employee">Сотрудник:</label>
+  <input type="text" id="employee" name="employee" value="<%= order.employee %>"><br>
+  <button type="submit">Обновить заявку</button>
+</form>
