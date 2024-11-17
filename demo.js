@@ -87,7 +87,7 @@ app.get("/orders/:number/update", (req, res) => {
   const { number } = req.params;
   const orderIndex = repo.findIndex(order => order.number === parseInt(number));
   if (orderIndex === -1) {
-    return res.status(404).send('Order not found');
+    return res.status(404).send('заявка не найдена');
   }
   res.render('update_order', { order: repo[orderIndex] }); 
 });
@@ -114,7 +114,12 @@ app.post("/orders/:number", (req, res) => {
   repo[orderIndex].employee = employee;
 
 
-  res.json(repo[orderIndex]);
+  res.json({ 
+    order: repo[orderIndex], 
+    statusChange: true, 
+    orderNumber: repo[orderIndex].number,
+    success: true 
+})
 });
 app.get("/search", (req, res) => {
   const { num, param } = req.query;

@@ -1,8 +1,7 @@
-<h1>Обнова</h1>
-<form action="/orders/<%= order.number %>" method="POST" enctype="application/x-www-form-urlencoded">
-  <input type="hidden" name="number" value="<%= order.number %>">
+<h1>Обновление заявки № <%= order.number %></h1>
+<form id="updateForm" method="POST" action="/orders/<%= order.number %>">
   <label for="description">Описание:</label>
-  <input type="text" id="description" name="description" value="<%= order.description %>"><br>
+  <textarea id="description" name="description"><%= order.description %></textarea><br>
   <label for="status">Статус:</label>
   <select id="status" name="status">
     <option value="в ожидании" <%= order.status === 'в ожидании' ? 'selected' : '' %>>в ожидании</option>
@@ -12,6 +11,40 @@
   <label for="employee">Сотрудник:</label>
   <input type="text" id="employee" name="employee" value="<%= order.employee %>"><br>
   <button type="submit">Обновить заявку</button><br>
-  <a href="/ord/new">Создать новый заказ</a><br>
-  <a href="/orders">К списку заявок</a><br>
 </form>
+
+<a href="/ord/new">Создать новый заказ</a><br>
+<a href="/orders">К списку заявок</a><br>
+
+<script>
+  document.getElementById('updateForm').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+    const form = this;
+    const formData = {
+      description: form.description.value,
+      status: form.status.value,
+      employee: form.employee.value
+    };
+
+    fetch(form.action, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.statusChange) {
+        alert(`Статус заявки №${data.orderNumber} обновлен!`);
+         
+      } else {
+        alert('Ошибка обновления заявки.');
+      }
+    })
+    .catch(error => {
+      console.error('Ошибка:', error);
+      alert('Произошла ошибка при обновлении заявки. Попробуйте ещё раз.');
+    });
+  });
+</script>
