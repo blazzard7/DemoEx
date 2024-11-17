@@ -116,5 +116,24 @@ app.post("/orders/:number", (req, res) => {
 
   res.json(repo[orderIndex]);
 });
+app.get("/search", (req, res) => {
+  const { num, param } = req.query;
+  let results = [];
 
+  if (num) {
+      const number = parseInt(num);
+      if (!isNaN(number)) {
+          const order = repo.find(order => order.number === number);
+          if (order) results.push(order);
+      }
+  } else if (param) {
+      results = repo.filter(order => Object.values(order).some(value => typeof value === 'string' && value.toLowerCase().includes(param.toLowerCase())));
+  }
+
+  res.render("search", { orders: results }); 
+});
+
+app.get("/search_form", (req, res) => {
+  res.render("search_form");
+});
 app.listen(7007);
