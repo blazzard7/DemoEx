@@ -33,7 +33,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/orders", (req, res) => {
-res.send(repo);
+  res.render("orders", { repo });
 });
 app.get("/orders/:number", (req, res) => {
   const number = parseInt(req.params.number);
