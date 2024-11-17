@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Поиск заявок</title>
+</head>
+<body>
+    <h1>Поиск заявок</h1>
+    <form action="/search" method="GET">
+        <label for="number">Номер заявки:</label>
+        <input type="number" id="number" name="num"><br><br>
+
+        <label>Параметр поиска:</label><br>
+        <label for="param">
+            <input type="radio" id="paramDevice" name="param" value="device">
+            Устройство
+        </label>
+        <label for="param">
+            <input type="radio" id="paramProblem" name="param" value="problemType">
+            Тип проблемы
+        </label>
+        <label for="param">
+            <input type="radio" id="paramDescription" name="param" value="description">
+            Описание
+        </label>
+        <label for="param">
+            <input type="radio" id="paramClient" name="param" value="client">
+            Клиент
+        </label>
+        <label for="param">
+            <input type="radio" id="paramStatus" name="param" value="status">
+            Статус
+        </label><br><br>
+
+
+        <label for="value">Значение:</label>
+        <input type="text" id="value" name="param"><br><br>
+
+        <button type="submit">Найти</button>
+    </form>
+    <a href="/orders">К списку заявок</a>
+</body>
+</html>
