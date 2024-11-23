@@ -22,7 +22,7 @@
   document.getElementById('updateForm').addEventListener('submit', function(event) {
     event.preventDefault();
     const form = this;
-    const formData = new FormData(form); // Use FormData for better data handling
+    const formData = new FormData(form); 
     const data = {};
     formData.forEach((value, key) => data[key] = value);
 

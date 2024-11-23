@@ -19,19 +19,24 @@ class Order {
       this.client = client;
       this.status = status;
       this.employee = employee;
+      
     }
   }
-  let repo = [];
-  repo.push(new Order(
-    1, 
-    "02-02-2005", 
-    "Monitor", 
-    "Сбой", 
-    "help", 
-    "абвгд",
-    "Ivan Zolo", 
-    "В ожидании", 
-    "Коротаев А.А."));
+  let repo = [{
+    number: 1,
+    date: "02-02-2005",
+    device:"PC",
+    ProblemType: "pizdec",
+    description: "Problem 1",
+    status: "выполнено",
+    employee: "John Doe",
+    description: "ASD",
+    comment: "AAAA",
+    client: "Zolo",
+    status:"в ожидании",
+    
+  }];
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -67,7 +72,8 @@ app.post("/ord", (req, res) => {
       comment,
       client,
       status,
-      employee 
+      employee,
+      
   } = req.body;
   
   const orderNumber = parseInt(number);
@@ -84,7 +90,8 @@ app.post("/ord", (req, res) => {
       comment,
       client,
       status,
-      employee 
+      employee,
+      
   );
   repo.push(newOrder);
   res.send(newOrder);
@@ -118,20 +125,28 @@ app.post("/orders/:number", (req, res) => {
   }
 
   const previousStatus = repo[orderIndex].status;
+    const now = new Date();
 
-  repo[orderIndex].description = description;
-  repo[orderIndex].status = status;
-  repo[orderIndex].employee = employee;
-  repo[orderIndex].comment = comment; 
+    repo[orderIndex].description = description;
+    repo[orderIndex].employee = employee;
+    repo[orderIndex].comment = comment;
+    repo[orderIndex].updatedAt = now;
 
+    if (status === "в работе" && previousStatus !== "в ожидании") {
+        repo[orderIndex].startedAt = now; 
+    } else if (status === "выполнено" && previousStatus === "в работе") {
+        repo[orderIndex].completedAt = now; 
+    }
 
-  res.json({
-    order: repo[orderIndex],
-    statusChange: previousStatus !== status,
-    orderNumber: repo[orderIndex].number,
-    status: status,
-    success: true
-  });
+    repo[orderIndex].status = status;
+
+    res.json({
+        order: repo[orderIndex],
+        statusChange: previousStatus !== status,
+        orderNumber: repo[orderIndex].number,
+        status: status,
+        success: true
+    });
 });
 app.get("/search", (req, res) => {
   const { num, param } = req.query;
@@ -153,4 +168,15 @@ app.get("/search", (req, res) => {
 app.get("/search_form", (req, res) => {
   res.render("search_form");
 });
+app.get('/stats', (req, res) => {
+  const completedCount = repo.filter(order => order.status === "выполнено").length;
+  const problemCounts = {};
+  repo.forEach(order => {
+      const problemType = order.ProblemType; 
+      problemCounts[problemType] = (problemCounts[problemType] || 0) + 1;
+  });
+
+  res.render('stats',{ completedCount, problemCounts });
+});
+
 app.listen(7007);
