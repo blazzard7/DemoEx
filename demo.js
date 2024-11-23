@@ -98,35 +98,40 @@ app.get("/orders/:number/update", (req, res) => {
   }
   res.render('update_order', { order: repo[orderIndex] }); 
 });
+
 app.post("/orders/:number", (req, res) => {
   const number = parseInt(req.params.number);
-  if (isNaN(number)) {
-    return res.status(400).send("некорректный номер");
+  if (isNaN(number) || number <= 0) {
+    return res.status(400).json({ error: "инвалидный номер заявки", success: false });
   }
 
   const orderIndex = repo.findIndex((order) => order.number === number);
   if (orderIndex === -1) {
-    return res.status(404).send("Заявка не найдена");
+    return res.status(404).json({ error: "Заявка не найдена", success: false });
   }
 
-  const { description, status, employee } = req.body;
+  const { description, status, employee, comment } = req.body; 
+  const allowedStatuses = ["в ожидании", "в работе", "выполнено"];
 
-  if (!description || !status || !employee) {
-    return res.status(400).send("не все поля заполнены");
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({ error: "Инвалид статус", success: false });
   }
 
-  
+  const previousStatus = repo[orderIndex].status;
+
   repo[orderIndex].description = description;
   repo[orderIndex].status = status;
   repo[orderIndex].employee = employee;
+  repo[orderIndex].comment = comment; 
 
 
-  res.json({ 
-    order: repo[orderIndex], 
-    statusChange: true, 
+  res.json({
+    order: repo[orderIndex],
+    statusChange: previousStatus !== status,
     orderNumber: repo[orderIndex].number,
-    success: true 
-})
+    status: status,
+    success: true
+  });
 });
 app.get("/search", (req, res) => {
   const { num, param } = req.query;

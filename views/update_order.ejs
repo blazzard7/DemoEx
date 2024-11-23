@@ -10,6 +10,8 @@
   </select><br>
   <label for="employee">Сотрудник:</label>
   <input type="text" id="employee" name="employee" value="<%= order.employee %>"><br>
+  <label for="comment">Комментарий:</label>
+  <input type="text" id="comment" name="comment" value="<%= order.comment %>"><br>
   <button type="submit">Обновить заявку</button><br>
 </form>
 
@@ -18,33 +20,45 @@
 
 <script>
   document.getElementById('updateForm').addEventListener('submit', function(event) {
-    event.preventDefault(); 
+    event.preventDefault();
     const form = this;
-    const formData = {
-      description: form.description.value,
-      status: form.status.value,
-      employee: form.employee.value
-    };
+    const formData = new FormData(form); // Use FormData for better data handling
+    const data = {};
+    formData.forEach((value, key) => data[key] = value);
 
     fetch(form.action, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(data)
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+       
+        return response.json().then(errorData => {
+          throw new Error(errorData.error || response.statusText);
+        });
+      }
+      return response.json();
+    })
     .then(data => {
-      if (data.statusChange) {
-        alert(`Статус заявки №${data.orderNumber} обновлен!`);
-         
+      if (data.success) {
+        if (data.status === 'выполнено') {
+          alert(`Заявка №${data.orderNumber} выполнена!`);
+        } else if (data.statusChange) {
+          alert(`Статус заявки №${data.orderNumber} обновлен!`);
+        } else {
+          alert('Заявка обновлена, но статус не изменен.');
+        }
       } else {
-        alert('Ошибка обновления заявки.');
+          
+          alert('Ошибка обновления заявки: ' + data.error);
       }
     })
     .catch(error => {
       console.error('Ошибка:', error);
-      alert('Произошла ошибка при обновлении заявки. Попробуйте ещё раз.');
+      alert(`Произошла ошибка при обновлении заявки: ${error.message}`);
     });
   });
 </script>
