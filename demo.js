@@ -1,17 +1,21 @@
 const express = require('express');
 const cors = require('cors');
-const app = express();
+const path = require('path'); 
 const ejs = require('ejs');
-app.set('view engine', 'ejs');
+const app = express();
+
+app.set('view engine', 'ejs'); 
+app.set('views', path.join(__dirname, 'views')); 
 
 
 class Order {
-    constructor(number, date, device, problemType, description, client, status, employee) {
+    constructor(number, date, device, problemType, description,comment, client, status, employee) {
       this.number = number;
       this.date = date;
       this.device = device;
       this.problemType = problemType;
       this.description = description;
+      this.comment = comment;
       this.client = client;
       this.status = status;
       this.employee = employee;
@@ -24,6 +28,7 @@ class Order {
     "Monitor", 
     "Сбой", 
     "help", 
+    "абвгд",
     "Ivan Zolo", 
     "В ожидании", 
     "Коротаев А.А."));
@@ -59,6 +64,7 @@ app.post("/ord", (req, res) => {
       device,
       problemType,
       description,
+      comment,
       client,
       status,
       employee 
@@ -75,6 +81,7 @@ app.post("/ord", (req, res) => {
       device,
       problemType,
       description,
+      comment,
       client,
       status,
       employee 
