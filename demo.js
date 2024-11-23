@@ -26,14 +26,14 @@ class Order {
     number: 1,
     date: "02-02-2005",
     device:"PC",
-    ProblemType: "pizdec",
-    description: "Problem 1",
-    status: "выполнено",
-    employee: "John Doe",
-    description: "ASD",
-    comment: "AAAA",
-    client: "Zolo",
-    status:"в ожидании",
+    ProblemType: "Не включается",
+    description: "Не работает",
+    status: "в ожидании",
+    employee: "Илон Маск",
+    description: "Помогите",
+    comment: "пж",
+    client: "Иван Золо",
+    
     
   }];
 
