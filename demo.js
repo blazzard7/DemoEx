@@ -9,7 +9,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 class Order {
-    constructor(number, date, device, problemType, description,comment, client, status, employee) {
+    constructor(number, date, device, problemType, description,comment, client, status, employee,startedAt,completedAt) {
       this.number = number;
       this.date = date;
       this.device = device;
@@ -19,6 +19,8 @@ class Order {
       this.client = client;
       this.status = status;
       this.employee = employee;
+      this.startedAt = startedAt;
+      this.completedAt = completedAt;
       
     }
   }
@@ -33,7 +35,8 @@ class Order {
     description: "Помогите",
     comment: "пж",
     client: "Иван Золо",
-    
+    startedAt:"",
+    completedAt: ""
     
   }];
 
@@ -168,15 +171,34 @@ app.get("/search", (req, res) => {
 app.get("/search_form", (req, res) => {
   res.render("search_form");
 });
+
 app.get('/stats', (req, res) => {
-  const completedCount = repo.filter(order => order.status === "выполнено").length;
+  
+  const completedOrders = repo.filter(order => order.status === "выполнено");
+  let totalTime = 0;
+  if (completedOrders.length > 0) {
+    completedOrders.forEach(order => {
+      const timeDifference = order.completedAt - order.startedAt;
+      totalTime += timeDifference / (1000 * 60);//в минутах
+    });
+  }
+  const averageTime = totalTime / completedOrders.length;
+  
   const problemCounts = {};
+
   repo.forEach(order => {
       const problemType = order.ProblemType; 
       problemCounts[problemType] = (problemCounts[problemType] || 0) + 1;
   });
 
-  res.render('stats',{ completedCount, problemCounts });
+  const completedCount = repo.filter(order => order.status === "выполнено").length;
+    res.render('stats', {
+        completedCount,
+        problemCounts,
+        averageTime
+       
+    });
 });
+  
 
 app.listen(7007);
